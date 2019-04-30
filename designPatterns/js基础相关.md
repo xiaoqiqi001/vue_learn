@@ -1,4 +1,5 @@
 1. 使用js实现一个AOP
+```javascript
     Function.prototype.before = function( beforefn ){
       var __self = this; // 保存原函数的引用
       return function(){ // 返回包含了原函数和新函数的"代理"函数
@@ -26,3 +27,4 @@
       console.log( 3 );
     });
     func();
+```
