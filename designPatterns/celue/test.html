@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css" media="screen">
+		.form-container{
+			width: 300px;
+			padding: 20px;
+			margin: 0 auto;
+		}
+		.form-item{
+			margin: 20px 0;
+		}
+		input{
+			margin-left: 12px;
+		}
+		.submit-item input{
+			margin-left: 0;
+		}
+	</style>
+</head>
+<body>
+	<div class="form-container">
+		<p>使用策略模式来实现对表单的验证</p>
+		<form action="test_submit" method="get" class="big-form" accept-charset="utf-8">
+			<div class="form-item">
+				<label>用户名</label><input type="text" name="username" value="">
+			</div>
+			<div class="form-item">
+				<label>密　码</label><input type="text" name="password" value="">
+			</div>
+			<div class="form-item submit-item">
+				<input type="button" onclick="toTest()" value="提交" name="提交">
+			</div>
+		</form>
+	</div>
+</body>
+<script type="text/javascript" charset="utf-8" async>
+	// 封装的方法对象（策略对象：封装着所需要的所有策略）
+	let allStrategies = {
+		// 验证表单值是否为空
+		isEmpty: function (message) {
+			return this.value === '' ? message : ''
+		},
+		// 验证表单值是否大于最小值
+		minLength: function (lenth, message) {
+			length = Number(lenth)
+			return this.value.length < length ? message : ''
+		}
+	}
+	// 环境类，收集所有dom对象，并使用响应的策略方法
+	function Validator(){
+		this.caches = []
+	}
+	Validator.prototype.add = function(dom, strategy, message){
+		let args = strategy.split(':')
+		// 为了不让验证函数在add函数中执行，所以在外层再套一层函数
+		// 将封装后的函数压入队列
+		this.caches.push(function(){
+			strategy = args.shift()
+			args.push(message)
+			// 返回验证方法执行以后的结果
+			return allStrategies[strategy].apply(dom, args)
+		})
+	}
+	// 执行队列中的每一个函数
+	Validator.prototype.start = function () {
+		let message = ''
+		for (let i = 0; i < this.caches.length; i++) {
+			message = this.caches[i]()
+			if (message) {
+				return message
+			}
+		}
+	}
+
+	//开始验证
+	function toTest(){
+		let curForm = document.getElementsByClassName('big-form')[0]
+		let validator = new Validator()
+		validator.add(curForm.username, 'isEmpty', '账号不能为空')
+		validator.add(curForm.password, 'minLength:6', '密码不能少于6位')
+		console.log(validator.start());
+	}
+
+	// 在上面的代码中，策略类的主要的两部分调用者(Validator.prototype.add)给实现者（allStrategies）中所有的方法提供环境并且依次调用他们，这样实现了环境和执行分离，使得策略函数的适用性更强（任何需要的地方都可以调用），在环境类中也不需要再执行多次判断，而是直接注册好环境（dom）就可以调用了。
+</script>
+</html>
