@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>优化网络请求</title>
+</head>
+<body>
+	<p>原来用户点击一次就发送一个请求，使用代理模式将两秒内的请求打包发给服务器</p>
+	<input type="checkbox" id="1"></input>1
+	<input type="checkbox" id="2"></input>2
+	<input type="checkbox" id="3"></input>3
+	<input type="checkbox" id="4"></input>4
+	<input type="checkbox" id="5"></input>5
+	<input type="checkbox" id="6"></input>6
+	<input type="checkbox" id="7"></input>7
+	<input type="checkbox" id="8"></input>8
+	<input type="checkbox" id="9"></input>9
+</body>
+<script type="text/javascript" charset="utf-8" async>
+	(function(){
+		function ajax(ids){
+			console.log('假装发请求')
+		}
+
+		// 发送请求的代理函数，收集用户在两秒内点击的所有id，并发送给后台
+		let syncFile = (function(){
+			let timer, caches = []
+
+			return function(id){
+				caches.push(id)
+				// 如果是在两秒内，就不执行发送
+				if (timer) {
+					return
+				}
+
+				timer = setTimeout(function(){
+					//发送请求
+					ajax(caches)
+
+					// 发送请求后将计时器的句柄置空，清除数组中所有数据
+					clearTimeout(timer)
+					timer = null
+					caches.length = 0
+				}, 2000)
+			}
+		})()
+
+		let allInputs = document.getElementsByTagName('input')
+		Array.prototype.forEach.call(allInputs, item => {
+			item.onclick = function(){
+				if (this.checked === true) {
+					syncFile(this.id)
+				}
+			}
+		})
+	})()
+</script>
+</html>
