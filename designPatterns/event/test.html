@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>发布订阅模式实例</title>
+</head>
+<body>
+	<button id="count">点我</button>
+	<div id="show"></div>
+</body>
+<script type="text/javascript" charset="utf-8" async>
+let Event = (function(){
+  let clientList = {}, cacheUntrigger = [], listen, trigger, remove
+  
+  trigger = function(){
+    // 获取要发布的类型
+    let type = Array.prototype.shift.call(arguments)
+    if(!clientList[type] || !clientList[type].length){
+      // 如果这个类型还没有被注册过，就先记录一下系统已经触发过这个事件
+      cacheUntrigger.push(type)
+      return false
+    }
+    // 把剩下的参数全部交给订阅函数
+    clientList[type].forEach(fn => {
+      fn.apply(this, arguments)
+    })
+  }
+
+  listen = function(type, fn){
+    // 如果是第一次监听类型
+    if(!clientList[type]){
+      clientList[type] = []
+    }
+    clientList[type].push(fn)
+    // 判断之前是否有触发过这个事件
+    if(cacheUntrigger.includes(type)){
+      trigger(type)
+      for(let l = cacheUntrigger.length-1; l>=0; l--){
+        let curType = cacheUntrigger[l]
+        if(curType === type){
+          cacheUntrigger.splice(l, 1)
+        }
+      }
+    }
+  }
+
+  remove = function(type, fn){
+    let fns = clientList[type]
+    if(!fns || fns.length === 0){
+      return false
+    }
+    //如果没有传递回调函数，就删除这个类型的所有函数
+    if(!fn){
+      clientList[type].length = 0
+    }else{
+      //这里反向遍历，可以一边遍历一边删除
+      for(let l = fns.length-1; l>=0; l--){
+        let curFn = fns[l]
+        if(curFn === fn){
+          fns.splice(l, 1)
+        }
+      }
+    }
+  }
+  return {
+    listen,
+    trigger,
+    remove
+  }
+})();
+(function(){
+	let count = 0
+	let button = document.getElementById( 'count' )
+	button.onclick = function(){
+		Event.trigger( 'add', count++ );
+	}
+})();
+(function(){
+	let div = document.getElementById( 'show' );
+		Event.listen( 'add', function( count ){
+		div.innerHTML = count;
+	})
+})();
+</script>
+</html>
