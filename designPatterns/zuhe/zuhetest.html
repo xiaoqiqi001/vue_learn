@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<button id="start">点我开始</button>
+</body>
+<script type="text/javascript">
+	window.onload = function(){
+		let createCommand = function(){
+			return {
+				commandList: [],
+				add: function(command){
+					this.commandList.push(command)
+				},
+				execute: function(){
+					this.commandList.forEach(item => {
+						item.execute()
+					})
+				}
+			}
+		}
+
+		let commandToAddFunc = (function(add){
+			if (add === undefined) {
+				// 如果是叶子节点，就不能再调用它的add方法
+				add = function(){
+					throw new Error( '叶对象不能添加子节点' );
+				}
+			}
+			return function(fn){
+				return {
+					execute: fn,
+					add: add
+				}
+			}
+		})()
+
+		let closeDoorCommand = commandToAddFunc(function(){
+			console.log('关门');
+		})
+
+		let openDoorCommand = commandToAddFunc(function(){
+			console.log('开门');
+		})
+
+		let pullDoorCommand = commandToAddFunc(function(){
+			console.log('拉门');
+		})
+
+		// 整个组合对象树的根节点
+		let commandRoot = createCommand()
+		// 第二层的指令缓存的对象
+		let commandChild = createCommand()
+		// 给第二层的缓存添加两个指令对象（叶子节点）
+		commandChild.add(closeDoorCommand)
+		commandChild.add(openDoorCommand)
+		// 将第二层的指令缓存对象添加到第一层的缓存
+		commandRoot.add(commandChild)
+		// 给第一次的缓存添加一个指令对象（叶子节点）
+		commandRoot.add(pullDoorCommand)
+		// commandRoot.execute()
+
+		document.getElementById('start').onclick = function(){
+			commandRoot.execute()
+		}
+	}
+</script>
+</html>
