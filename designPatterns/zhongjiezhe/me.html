@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>自己实现的中介者模式需求</title>
+  </head>
+  <body>
+    选择颜色: <select id="colorSelect">
+    <option value="">请选择</option> <option value="red">红色</option> <option value="blue">蓝色</option>
+    </select>
+    输入购买数量: <input type="text" id="numberInput"/><br/>
+    您选择了颜色: <div id="colorInfo"></div><br/> 您输入了数量: <div id="numberInfo"></div><br/>
+    <button id="nextBtn" disabled="true">请选择手机颜色和购买数量</button> </body>
+    <script>
+      var goods = { // 手机库存 
+        "red": 3,
+        "blue": 6 
+      };
+
+      var betweenObj = {
+        selectElement: document.getElementById('colorSelect'),
+        inputElement: document.getElementById('numberInput'),
+        colorDivElement: document.getElementById('colorInfo'),
+        numberDivElement: document.getElementById('numberInfo'),
+        nextBtnElement: document.getElementById('nextBtn'),
+        selectValue: '',
+        inputValue: '',
+        // 显示已经选择的颜色
+        showColor: function () {
+          this.colorDivElement.innerText = this.selectValue === 'red' ? '红色' : '蓝色'
+        },
+        // 显示已经选择的数量
+        showNumber: function () {
+          this.numberDivElement.innerText = this.inputValue
+        },
+        // 对相对应的颜色的库存进行判断
+        checkCanPut: function () {
+          if (goods[this.selectValue] < this.inputValue) {
+            this.nextBtnElement.innerText = '库存不足'
+            this.nextBtnElement.disabled = true
+          } else {
+            this.nextBtnElement.innerText = '放入购物车'
+            this.nextBtnElement.disabled = false
+          }
+        },
+        // 检查是否输入了相应的值，并对相应的状态进行切换
+        checkSelectChange: function () {
+          // 检查选择的颜色
+          if (this.selectValue !== 'red' && this.selectValue !== 'blue') {
+            this.nextBtnElement.innerText = '请选择颜色'
+            this.nextBtnElement.disabled = true
+            return
+          }
+          this.showColor()
+
+          // 检查输入的购买数量
+          if (!this.inputValue) {
+            this.nextBtnElement.innerText = '请输入购买数量'
+            this.nextBtnElement.disabled = true
+            return
+          }
+          this.showNumber()
+          this.checkCanPut(this.inputValue, this.selectValue)
+        }
+      }
+
+      var selectElement = document.getElementById('colorSelect'),
+        inputElement = document.getElementById('numberInput'),
+        colorDivElement = document.getElementById('colorInfo'),
+        numberDivElement = document.getElementById('numberInfo'),
+        nextBtnElement = document.getElementById('nextBtn');
+
+      selectElement.addEventListener('change', function(e) {
+        betweenObj.selectValue = e.target.value
+        betweenObj.checkSelectChange()
+      })
+
+      inputElement.addEventListener('input', function(e) {
+        betweenObj.inputValue = e.target.value
+        betweenObj.checkSelectChange()
+      })
+    </script>
+</html>
