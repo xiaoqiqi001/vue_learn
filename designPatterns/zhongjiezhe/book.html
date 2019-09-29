@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>书上实现的中介者模式需求</title>
+  </head>
+  <body>
+    选择颜色: <select id="colorSelect">
+    <option value="">请选择</option> <option value="red">红色</option> <option value="blue">蓝色</option>
+    </select>
+    输入购买数量: <input type="text" id="numberInput"/><br/>
+    您选择了颜色: <div id="colorInfo"></div><br/> 您输入了数量: <div id="numberInfo"></div><br/>
+    <button id="nextBtn" disabled="true">请选择手机颜色和购买数量</button> </body>
+    <script>
+      var goods = { // 手机库存 
+        "red": 3,
+        "blue": 6 
+      };
+
+      var selectElement = document.getElementById('colorSelect'),
+        inputElement = document.getElementById('numberInput'),
+        colorDivElement = document.getElementById('colorInfo'),
+        numberDivElement = document.getElementById('numberInfo'),
+        nextBtnElement = document.getElementById('nextBtn'),
+        selectValue = '',
+        inputValue = '';
+
+      // 约等于是一个对象，和外面只有input元素和select元素上交集，这样就造成了在其他地方调用这个方法是很容易的
+      // 内部代码的已扩展性主要还是因为内部的逻辑条理特别清楚，每一个代码块负责的业务控制的特别清楚，所以才使得内部业务在扩展性方面很容易
+      var mediator = (function () {
+        return {
+          change: function (curObj) {
+            var color = selectElement.value,
+              input = inputElement.value;
+            if (curObj === selectElement) {
+              colorDivElement.innerHTML = color === 'red' ? '红色' : '蓝色'
+            } else if(curObj === inputElement) {
+              numberDivElement.innerHTML = input
+            }
+            
+            if (!color) {
+              nextBtnElement.innerText = '请选择颜色'
+              nextBtnElement.disabled = true
+              return
+            }
+
+            if (!input) {
+              nextBtnElement.innerHTML = '请输入正确的购买数量'
+              nextBtnElement.disabled = true
+              return
+            }
+
+            if (goods[color] < input) {
+              nextBtnElement.innerHTML = '库存不足'
+              nextBtnElement.disabled = true
+              return
+            }
+
+            nextBtnElement.disabled = false;
+            nextBtnElement.innerHTML = '放入购物车';
+          }
+        }
+      })()
+
+      inputElement.oninput = function () {
+        mediator.change(this)
+      }
+
+      selectElement.onchange = function () {
+        console.log('我被触发了')
+        mediator.change(this)
+      }
+    </script>
+</html>
