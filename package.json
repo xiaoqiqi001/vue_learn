@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/xiaoqiqi001/vue_learn#readme",
   "dependencies": {
+    "flex.css": "^1.1.7",
     "javascript-state-machine": "^3.1.0"
   },
   "devDependencies": {
