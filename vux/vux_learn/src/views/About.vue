@@ -11,8 +11,16 @@
 </template>
 <script>
 import 'flex.css';
+import { log } from 'util';
 export default {
-  
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      console.log('传过来的this', to.params.originThis)
+    })
+  },
+  created(){
+    console.log(this.$route)
+  }
 }
 </script>
 <style lang="css">
