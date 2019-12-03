@@ -1,24 +1,23 @@
-class SingleObject {
-  login () {
-    alert('SingleObject')
+class Math {
+  constructor (a, b) {
+    this.a = a
+    this.b = b
+  }
+
+  @log
+  add () {
+    return this.a + this.b
   }
 }
 
-// 使用闭包来保存变量的标准标准模版，可以当成对象来用
-SingleObject.getInstance = (function () {
-  let instance = null
-  return function () {
-    if (instance === null) {
-      instance = new SingleObject()
-    }
-    return instance
+function log (target, name, descriptor) {
+  let oldValue = descriptor.value
+  descriptor.value = function () {
+    console.log('这里调用了', name, descriptor)
+    return oldValue.apply(this, arguments)
   }
-})()
+  return descriptor
+}
 
-let p1 = SingleObject.getInstance()
-p1.login()
-
-let p2 = SingleObject.getInstance()
-p2.login()
-
-console.log('p1 === p2', p1 === p2)
+let math = new Math(2, 4)
+console.log(math.add())
