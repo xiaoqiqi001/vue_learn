@@ -1,44 +1,33 @@
- class Subject {
-   constructor () {
-     this.observers = []
-     this.state = 0
-   }
+function each (data) {
+  // 生成遍历器
+  // let iterator = data[Symbol.iterator]()
 
-   // 类似于状态模式，只是状态模式中当状态变化的时候只执行固定的操作，并且要状态切换，但是这里不需要状态切换
-   setState (state) {
-     this.state = state
-     this.notifyAllObserver()
-   }
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
+  // console.log('next is ', iterator.next())
 
-   getState () {
-     return this.state
-   }
+  // let item = {done: false}
+  // while(!item.done){
+  //   item = iterator.next()
+  //   console.log(item.value)
+  // }
 
-   notifyAllObserver () {
-     this.observers.forEach(observer => {
-       observer.update()
-     })
-   }
-
-   addObserver (observer) {
-     this.observers.push(observer)
-   }
- }
-
- class Observer {
-  constructor (name, subject) {
-    this.name = name
-    this.subject = subject
-    this.subject.addObserver(this)
+  // 带有遍历器特性的对象 data[Symbol.iterator]有值，才可以用forOf来便利
+  for (const iterator of data) {
+    console.log(iterator)
   }
+}
 
-  update () {
-    console.log(`${this.name} update, state: ${this.subject.getState()}`)
-  }
- }
+let arr = [1,2,3,4,5]
+let map = new Map()
+map.set('b', 100)
+map.set('a', 200)
 
-let subject = new Subject()
-let o1 = new Observer('o1', subject)
-let o2 = new Observer('o2', subject)
-let o3 = new Observer('o3', subject)
-subject.setState(1)
+each(arr)
+each(map)
