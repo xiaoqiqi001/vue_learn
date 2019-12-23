@@ -57,4 +57,60 @@ router.post('/base/buffer', function(req, res) {
   })
 })
 
+router.get('/error/get', function(req, res) {
+  if (Math.random() > 0.5) {
+    res.json({
+      msg: `hello world`
+    })
+  } else {
+    res.status(500)
+    res.end()
+  }
+})
+
+router.get('/extend/get', function(req, res) {
+  res.json({
+    msg: `hello world`
+  })
+})
+
+router.options('/extend/options', function(req, res) {
+  res.end()
+})
+
+router.delete('/extend/delete', function(req, res) {
+  res.end()
+})
+
+router.head('/extend/head', function(req, res) {
+  res.end()
+})
+
+router.post('/extend/post', function(req, res) {
+  res.end()
+})
+
+router.put('/extend/put', function(req, res) {
+  res.end()
+})
+
+router.patch('/extend/patch', function(req, res) {
+  res.end()
+})
+
+router.get('/extend/user', function(req, res) {
+  res.json({
+    code: 0,
+    message: 'ok',
+    result: {
+      name: 'jack',
+      age: 18
+    }
+  })
+})
+
+router.get('/interceptor/get', function(req, res) {
+  res.end('hello')
+})
+
 app.use(router)
