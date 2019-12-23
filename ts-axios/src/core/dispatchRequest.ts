@@ -2,7 +2,7 @@ import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types/index'
 import { buildUrl } from '../helps/url'
 import xhr from './xhr'
 import { transformRequest, transformResponse } from '../helps/data'
-import { processHeaders } from '../helps/headers'
+import { processHeaders, flattenHeaders } from '../helps/headers'
 
 // 其他所有的程序调用的axios函数，接收一个AxiosRequestConfig类型的参数，返回一个AxiosPromise类型的值
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
@@ -22,6 +22,8 @@ function processConfig(config: AxiosRequestConfig): void {
   config.headers = transformHeaders(config)
   // 处理请求的数据
   config.data = transformRequestData(config)
+  // 对请求头里面属性值进行整理和删除
+  config.headers = flattenHeaders(config.headers, config.methods!)
 }
 
 // 处理请求配置中的url

@@ -20,6 +20,7 @@
     "babel-loader": "^7.1.5",
     "flex.css": "^1.1.7",
     "javascript-state-machine": "^3.1.0",
+    "qs": "^6.9.1",
     "typescript": "^3.7.3"
   },
   "devDependencies": {

@@ -9,6 +9,8 @@ export interface AxiosRequestConfig {
   headers?: any,
   responseType?: XMLHttpRequestResponseType,
   timeout?: number
+
+  [propName: string]: any
 }
 
 // axios的返回值
@@ -34,6 +36,7 @@ export interface AxiosError extends Error {
 }
 
 export interface Axios {
+  defaults: AxiosRequestConfig
   interceptors: {
     request: AxiosInterceptorManager<AxiosRequestConfig>
     response: AxiosInterceptorManager<AxiosResponse>
