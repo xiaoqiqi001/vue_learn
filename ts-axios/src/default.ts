@@ -1,4 +1,6 @@
 import { AxiosRequestConfig }  from './types'
+import { processHeaders } from './helps/headers';
+import { transformRequest, transformResponse } from './helps/data';
 const defaults: AxiosRequestConfig = {
   methods: 'get',
   timeout: 0,
@@ -6,7 +8,18 @@ const defaults: AxiosRequestConfig = {
     common: {
       Accept: 'application/json, text/plain, */*'
     }
-  }
+  },
+  transformRequest: [
+    function (headers: any, data: any): any {
+      processHeaders(headers, data)
+      return transformRequest(data)
+    }
+  ],
+  transformResponse: [
+    function (data: any): any {
+      return transformResponse(data)
+    }
+  ]
 }
 
 // 每一种请求方法对应的要往请求头里面的添加的字段和值

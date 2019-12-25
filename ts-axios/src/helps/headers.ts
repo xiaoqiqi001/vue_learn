@@ -58,5 +58,6 @@ export function flattenHeaders (headers: any, method: Methods): any {
     delete headers[key]
   })
 
+  console.log(`TCL: headers flatten`, headers, method)
   return headers
 }
