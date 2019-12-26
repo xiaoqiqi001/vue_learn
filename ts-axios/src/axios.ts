@@ -6,6 +6,7 @@ import mergeConfig from './core/mergeConfig'
 import CancelToken from './cancel/CancelToken'
 import Cancel, { isCancel } from './cancel/Cancel'
 
+// 创建axios实例并挂载取消请求的功能函数
 function createInstance (config: AxiosRequestConfig): AxiosStatic {
   const context = new Axios(config)
   const instance  = Axios.prototype.request.bind(context)

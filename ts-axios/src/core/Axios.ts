@@ -13,6 +13,8 @@ interface PromiseChain<T> {
   rejected?: RejectedFn
 }
 
+// 这个文件主要对请求配置进行处理和合并，并将请求和返回拦截器加到执行链中，循环执行执行链中的函数
+// 封装axios.get等方法
 
 export default class Axios {
   defaults: AxiosRequestConfig
@@ -27,6 +29,7 @@ export default class Axios {
   }
 
   request (url: any, config?: any): AxiosPromise {
+    // 将url合并到config中去
     if (typeof url === 'string') {
       if (!config) {
         config = {} as AxiosRequestConfig
@@ -36,8 +39,10 @@ export default class Axios {
       config = url
     }
 
+    // 合并默认配置和用户传递的配置（从右向左）
     config = mergeConfig(this.defaults, config)
 
+    // 初始化执行链，将请求链和返回链合并到chain变量中去
     let chain: PromiseChain<any>[] = [{
       resolved: dispatchRequest,
       rejected: undefined
@@ -53,6 +58,7 @@ export default class Axios {
 
     let promise = Promise.resolve(config)
 
+    // 循环调用chain
     while(chain.length) {
       let { resolved, rejected } = chain.shift()!
       promise = promise.then(resolved, rejected)

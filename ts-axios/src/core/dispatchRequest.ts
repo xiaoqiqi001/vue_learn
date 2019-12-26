@@ -5,6 +5,7 @@ import { transformRequest, transformResponse } from '../helps/data'
 import { processHeaders, flattenHeaders } from '../helps/headers'
 import transform from './transform'
 
+// 这个文件主要处理主请求：对请求头，请求数据进行处理，对是否重复使用cancel进行判断，返回请求结果
 // 其他所有的程序调用的axios函数，接收一个AxiosRequestConfig类型的参数，返回一个AxiosPromise类型的值
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
   // 检查config.cancelToken有没有被使用过

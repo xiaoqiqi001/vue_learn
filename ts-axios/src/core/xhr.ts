@@ -2,6 +2,7 @@ import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types/index'
 import { parseHeaders } from '../helps/headers'
 import { createError } from '../helps/errors'
 
+// 这个文件主要用于发送请求
 export default function xhr (config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
     const {data = null, url, methods = 'get', headers, responseType, timeout, cancelToken} = config

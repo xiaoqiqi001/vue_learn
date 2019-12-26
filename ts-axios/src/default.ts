@@ -1,6 +1,7 @@
 import { AxiosRequestConfig }  from './types'
 import { processHeaders } from './helps/headers';
 import { transformRequest, transformResponse } from './helps/data';
+// 请求的默认配置文件
 const defaults: AxiosRequestConfig = {
   methods: 'get',
   timeout: 0,
@@ -16,7 +17,7 @@ const defaults: AxiosRequestConfig = {
     }
   ],
   transformResponse: [
-    function (data: any): any {
+    function (headers: any, data: any): any {
       return transformResponse(data)
     }
   ]
