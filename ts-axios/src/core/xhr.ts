@@ -4,7 +4,7 @@ import { createError } from '../helps/errors'
 
 export default function xhr (config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const {data = null, url, methods = 'get', headers, responseType, timeout} = config
+    const {data = null, url, methods = 'get', headers, responseType, timeout, cancelToken} = config
 
     const request = new XMLHttpRequest()
 
@@ -18,7 +18,7 @@ export default function xhr (config: AxiosRequestConfig): AxiosPromise {
 
     request.open(methods.toUpperCase(), url!, true)
 
-    Object.keys(headers).forEach(name => {
+    Object.keys(headers || []).forEach(name => {
       if (data === null && name.toLowerCase() === 'content-type') {
         delete headers['name']
       } else {
@@ -55,6 +55,13 @@ export default function xhr (config: AxiosRequestConfig): AxiosPromise {
         }
         handleReponse(response)
       }
+    }
+
+    if (cancelToken) {
+      cancelToken.promise.then(reason => {
+        request.abort()
+        reject(reason)
+      })
     }
 
     request.send(data)

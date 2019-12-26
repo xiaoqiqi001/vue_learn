@@ -7,6 +7,8 @@ import transform from './transform'
 
 // 其他所有的程序调用的axios函数，接收一个AxiosRequestConfig类型的参数，返回一个AxiosPromise类型的值
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  // 检查config.cancelToken有没有被使用过
+  throwIfCancellationRequested(config)
   // 处理请求的配置
   processConfig(config)
   // 发送请求
@@ -50,4 +52,10 @@ function transformResponseData (res: AxiosResponse) : AxiosResponse {
   // res.data = transformResponse(res.data)
   res.data = transform(res.headers, res.data, res.config.transformResponse)
   return res
+}
+
+function throwIfCancellationRequested (config: AxiosRequestConfig):void {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested()
+  }
 }

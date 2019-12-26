@@ -26,7 +26,7 @@ export default class Axios {
     }
   }
 
-  request (url: any, config: any): AxiosPromise {
+  request (url: any, config?: any): AxiosPromise {
     if (typeof url === 'string') {
       if (!config) {
         config = {} as AxiosRequestConfig
@@ -61,6 +61,7 @@ export default class Axios {
     return promise
   }
 
+  // 下面调用的
   get (url: string, config?: AxiosRequestConfig): AxiosPromise {
     return this._reqeustMethodWithoutData(url, 'get', config)
   }
@@ -90,14 +91,23 @@ export default class Axios {
   }
 
   _reqeustMethodWithoutData (url: string, method: Methods, config?: AxiosRequestConfig): AxiosPromise {
-    return dispatchRequest(Object.assign(config || {}, {
+    // return dispatchRequest(Object.assign(config || {}, {
+    //   methods: method,
+    //   url: url
+    // }))
+    return this.request(Object.assign(config || {}, {
       methods: method,
       url: url
     }))
   }
 
   _reqeustMethodWithData (url: string, method: Methods, data?: any, config?: AxiosRequestConfig): AxiosPromise {
-    return dispatchRequest(Object.assign(config || {}, {
+    // return dispatchRequest(Object.assign(config || {}, {
+    //   methods: method,
+    //   url: url,
+    //   data
+    // }))
+    return this.request(Object.assign(config || {}, {
       methods: method,
       url: url,
       data
