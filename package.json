@@ -18,6 +18,7 @@
   "homepage": "https://github.com/xiaoqiqi001/vue_learn#readme",
   "dependencies": {
     "babel-loader": "^7.1.5",
+    "cookie-parser": "^1.4.4",
     "flex.css": "^1.1.7",
     "javascript-state-machine": "^3.1.0",
     "qs": "^6.9.1",

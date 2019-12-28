@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 const compiler = webpack(WebpackConfig)
@@ -22,6 +23,7 @@ app.use(express.static(__dirname))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 const port = process.env.PORT || 8989
 module.exports = app.listen(port, () => {
@@ -127,6 +129,11 @@ router.post('/cancel/post', function (req, res) {
   setTimeout(() => {
     res.json(req.body)
   }, 1000);
+})
+
+router.get('/more/get', function (req, res) {
+  res.cookie('XSRF-TOKEN-D', '1234abc')
+  res.json('hello')
 })
 
 app.use(router)
