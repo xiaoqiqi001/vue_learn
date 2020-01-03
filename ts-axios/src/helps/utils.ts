@@ -12,6 +12,14 @@ export function isPlainObject(val: any): val is Object {
   return toString.call(val) === '[object Object]'
 }
 
+export function isFormdata (val: any): val is FormData {
+  return val !== null && val instanceof FormData
+}
+
+export function isURLSearchParams (val: any): val is URLSearchParams {
+  return val !== null && val instanceof URLSearchParams
+}
+
 export function extend <T, U> (to: T, from: U): T&U {
   for(let key in from) {
     (to as T & U)[key] = from[key] as any
