@@ -20,7 +20,11 @@ function axios(options) {
     }
 
     function onerror() {
-      reject(new Error('Can\'t connect to ' + JSON.stringify(options.url)));
+      // 修改点2 当xhr出现错误的时候，先把request.responseText暴露出去，否则xhr直接报错
+      reject(
+        parse(request.responseText) ||
+        new Error('Can\'t connect to ' + JSON.stringify(options.url))
+      );
     }
 
     try {
@@ -49,7 +53,8 @@ function axios(options) {
       reject(e);
     }
 
-    request.send(options.data || null);
+    // 修改点1: xhr请求中的json类型的表单，需要将表单数据json.stringify一下
+    request.send(options.data ? JSON.stringify(options.data) : null);
   });
 
   promise.success = function (fn) {

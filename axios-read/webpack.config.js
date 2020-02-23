@@ -25,6 +25,10 @@ module.exports = {
       app.get('/test', (req, res) => {
         res.json({ test: 111 })
       })
+
+      app.post('/post/test', (req, res) => {
+        res.json({ test: 'post/test' })
+      })
     }
   },
   mode: 'development',
